@@ -1,13 +1,44 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
+// prisma/schema.prisma
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  // NO url here - it goes into prisma.config.ts
+}
+
+enum UserRole {
+  STUDENT
+  RESTAURANT
+  DISPATCH
+  ADMIN
+}
+
+model School {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  profiles  Profile[]
+
+  @@map("School")
+}
+
+model Profile {
+  id             String    @id @default(cuid())
+  supabaseUserId String    @unique
+  email          String    @unique
+  fullName       String
+  role           UserRole  @default(STUDENT)
+  schoolId       String?
+  school         School?   @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  phoneNumber    String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([schoolId])
+  @@map("User")
 }
