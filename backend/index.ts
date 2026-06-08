@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
-import { schoolsRouter } from './src/routes/schools';
-import { profilesRouter } from './src/routes/profiles';
+import { schoolsRouter } from './src/routes/schools.ts';
+import { profilesRouter } from './src/routes/profiles.ts';
 
 const app = express();
 const port = Number(process.env.PORT ?? 3000);
